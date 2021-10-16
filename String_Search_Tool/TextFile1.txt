@@ -1,0 +1,92 @@
+﻿foreach (String extension in fTypes)
+                {
+                    allFiles = di.GetFiles(extension);
+                    fileContent = null;
+                    string checkLine;
+                    if (printLines.Checked)
+                    {
+                        bool isFound = false;
+                        foreach (FileInfo fi in allFiles)
+                        {
+                            fileContent = new StreamReader(fi.FullName);
+                            checkLine = fileContent.ReadLine();
+                            while (checkLine != null)
+                            {
+                                for (int j = 0; j < numsearchStrings; j++)
+                                    if (checkLine.ToUpper().Contains(searchStrings[j]))
+                                    {
+                                        if (!isFound)
+                                            writeList.WriteLine(searchStrings[j] + " : " + fi.Name);
+                                        writeList.WriteLine(checkLine);
+                                        isFound = true;
+                                    }
+                                checkLine = fileContent.ReadLine();
+                            }
+                            if (isFound)
+                                writeList.WriteLine();
+                            fileContent.Close();
+                            isFound = false;
+                        }
+                    }
+
+
+
+-----------------------------------------
+Improvement to printline search
+
+bool[] isFound;
+String[] found = new String[numsearchStrings];
+
+if (printLines.Checked)
+                    {
+                        bool isFound = false;
+                        foreach (FileInfo fi in allFiles)
+                        {
+                            for (int j = 0; j < numsearchStrings; j++)
+                                {
+                                    fileContent = new StreamReader(fi.FullName);
+                                    checkLine = fileContent.ReadLine();
+                                    while (checkLine != null)
+                                    {
+                                        if (checkLine.ToUpper().Contains(searchStrings[j]))
+                                        {
+                                            if (!isFound)
+                                                writeList.WriteLine(searchStrings[j] + " : " + fi.Name);
+                                            writeList.WriteLine(checkLine);
+                                            isFound = true;
+                                        }
+                                        checkLine = fileContent.ReadLine();
+                                    }
+                                    if (isFound)
+                                        writeList.WriteLine();
+                                    fileContent.Close();
+                                    isFound = false;
+                                }
+                        }
+                    }
+
+					---------------------------------
+
+					String[] results = new String[numsearchStrings];
+					bool[] found = new bool[numsearchStrings];
+                        foreach (FileInfo fi in allFiles)
+                        {
+                            found = new bool[numsearchStrings];
+                            fileContent = new StreamReader(fi.FullName);
+                            checkLine = fileContent.ReadLine();
+                            while (checkLine != null)
+                            {
+                                for (int j = 0; j < numsearchStrings; j++)
+									{
+										if (checkLine.ToUpper().Contains(searchStrings[j]))
+											{
+												if (!found[j])
+													results[j] += printStrings[j] + " : " + fi.Name + "\n";
+												results[j] += checkLine + "\n";
+												found[j] = true;
+											}
+									}
+                                checkLine = fileContent.ReadLine();
+                            }
+							fileContent.Close();
+                        }
